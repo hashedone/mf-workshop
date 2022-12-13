@@ -53,7 +53,7 @@ pub fn execute(
     match msg {
         Bid {} => exec::bid(deps, info),
         Close {} => exec::close(deps, info),
-        Retract { .. } => unimplemented!(),
+        Retract { receiver } => exec::retract(deps, info, receiver),
     }
 }
 

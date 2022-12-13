@@ -69,3 +69,35 @@ pub fn close(deps: DepsMut, info: MessageInfo) -> Result<Response, ContractError
 
     Ok(resp)
 }
+
+pub fn retract(
+    deps: DepsMut,
+    info: MessageInfo,
+    receiver: Option<String>,
+) -> Result<Response, ContractError> {
+    ensure!(IS_CLOSED.load(deps.storage)?, ContractError::BiddingOpen);
+
+    let total = BIDS
+        .may_load(deps.storage, &info.sender)?
+        .unwrap_or_default();
+
+    BIDS.remove(deps.storage, &info.sender);
+
+    let receiver = receiver
+        .map(|addr| deps.api.addr_validate(&addr))
+        .transpose()?
+        .unwrap_or_else(|| info.sender.clone());
+
+    let denom = TOKEN.load(deps.storage)?;
+    let transfer_msg = BankMsg::Send {
+        to_address: receiver.into(),
+        amount: coins(total.u128(), denom),
+    };
+
+    let resp = Response::new()
+        .add_attribute("action", "retract")
+        .add_attribute("sender", info.sender.as_str())
+        .add_message(transfer_msg);
+
+    Ok(resp)
+}

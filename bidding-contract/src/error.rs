@@ -14,4 +14,6 @@ pub enum ContractError {
     BiddingClosed,
     #[error("Unauthorized")]
     Unauthorized,
+    #[error("Bidding is open")]
+    BiddingOpen,
 }

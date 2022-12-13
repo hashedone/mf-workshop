@@ -14,5 +14,6 @@ cosmwasm-schema = "1.1.9"
 cosmwasm-std = "1.1.9"
 cw-storage-plus = "1.0.1"
 cw-utils = "1.0.0"
+getrandom = { version = "0.2.8", features = ["js"] }
 serde = { version = "1.0.150", features = ["derive"] }
 thiserror = "1.0.37"
