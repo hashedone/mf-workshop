@@ -1,16 +1,9 @@
-use cosmwasm_schema::cw_serde;
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
 use cosmwasm_std::{Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
+use msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 
-#[cw_serde]
-pub struct InstantiateMsg {}
-
-#[cw_serde]
-pub enum ExecuteMsg {}
-
-#[cw_serde]
-pub enum QueryMsg {}
+pub mod msg;
 
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn instantiate(
