@@ -4,6 +4,7 @@ use cosmwasm_std::{Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult}
 use msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 
 pub mod msg;
+pub mod state;
 
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn instantiate(
