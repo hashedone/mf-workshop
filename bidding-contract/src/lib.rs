@@ -1,10 +1,13 @@
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
-use cosmwasm_std::{Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Uint128};
+use cosmwasm_std::{
+    to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Uint128,
+};
 use msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use state::{COMISSION, HIGHEST_BID, IS_CLOSED, OWNER, TOKEN};
 
 pub mod msg;
+pub mod query;
 pub mod state;
 
 #[cfg_attr(not(feature = "library"), entry_point)]
@@ -47,11 +50,19 @@ pub fn execute(
 
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn query(
-    _deps: Deps,
+    deps: Deps,
     _env: Env,
-    _msg: QueryMsg,
+    msg: QueryMsg,
 ) -> StdResult<Binary> {
-    Ok(Binary::default())
+    use QueryMsg::*;
+
+    match msg {
+        IsClosed {} => to_binary(&query::is_closed(deps)?),
+        HighestBid {} => to_binary(&query::highest_bid(deps)?),
+        Winner {} => to_binary(&query::winner(deps)?),
+        TotalBid { addr } => to_binary(&query::total_bid(deps, addr)?),
+        AllBids { .. } => unimplemented!(),
+    }
 }
 
 

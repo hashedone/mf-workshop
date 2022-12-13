@@ -31,26 +31,26 @@ pub enum QueryMsg {
 
 #[cw_serde]
 pub struct IsClosedResp {
-    is_closed: bool,
+    pub is_closed: bool,
 }
 
 #[cw_serde]
 pub struct TotalBidResp {
-    amount: Uint128,
+    pub amount: Uint128,
 }
 
 #[cw_serde]
 pub struct WinnerResp {
-    winner: Option<Addr>,
+    pub winner: Option<Addr>,
 }
 
 #[cw_serde]
 pub struct BidInfo {
-    addr: Addr,
-    amount: Uint128,
+    pub addr: Addr,
+    pub amount: Uint128,
 }
 
 #[cw_serde]
 pub struct AllBidsResp {
-    bids: Vec<BidInfo>,
+    pub bids: Vec<BidInfo>,
 }
