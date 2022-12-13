@@ -58,11 +58,7 @@ pub fn execute(
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
-pub fn query(
-    deps: Deps,
-    _env: Env,
-    msg: QueryMsg,
-) -> StdResult<Binary> {
+pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     use QueryMsg::*;
 
     match msg {
@@ -70,8 +66,6 @@ pub fn query(
         HighestBid {} => to_binary(&query::highest_bid(deps)?),
         Winner {} => to_binary(&query::winner(deps)?),
         TotalBid { addr } => to_binary(&query::total_bid(deps, addr)?),
-        AllBids { .. } => unimplemented!(),
+        AllBids { start_after, limit } => to_binary(&query::all_bids(deps, start_after, limit)?),
     }
 }
-
-
