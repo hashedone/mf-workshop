@@ -3,9 +3,12 @@ use cosmwasm_std::entry_point;
 use cosmwasm_std::{
     to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Uint128,
 };
+use error::ContractError;
 use msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use state::{COMISSION, HIGHEST_BID, IS_CLOSED, OWNER, TOKEN};
 
+pub mod error;
+pub mod exec;
 pub mod msg;
 pub mod query;
 pub mod state;
@@ -40,12 +43,18 @@ pub fn instantiate(
 
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn execute(
-    _deps: DepsMut,
+    deps: DepsMut,
     _env: Env,
-    _info: MessageInfo,
-    _msg: ExecuteMsg,
-) -> StdResult<Response> {
-    Ok(Response::default())
+    info: MessageInfo,
+    msg: ExecuteMsg,
+) -> Result<Response, ContractError> {
+    use ExecuteMsg::*;
+
+    match msg {
+        Bid {} => exec::bid(deps, info),
+        Close {} => unimplemented!(),
+        Retract { .. } => unimplemented!(),
+    }
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
