@@ -12,4 +12,6 @@ pub enum ContractError {
     BidTooLow { total: Uint128, highest: Uint128 },
     #[error("Bidding is closed")]
     BiddingClosed,
+    #[error("Unauthorized")]
+    Unauthorized,
 }

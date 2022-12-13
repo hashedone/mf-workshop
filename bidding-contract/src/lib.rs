@@ -52,7 +52,7 @@ pub fn execute(
 
     match msg {
         Bid {} => exec::bid(deps, info),
-        Close {} => unimplemented!(),
+        Close {} => exec::close(deps, info),
         Retract { .. } => unimplemented!(),
     }
 }

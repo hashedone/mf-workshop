@@ -44,3 +44,28 @@ pub fn bid(deps: DepsMut, info: MessageInfo) -> Result<Response, ContractError> 
 
     Ok(resp)
 }
+
+pub fn close(deps: DepsMut, info: MessageInfo) -> Result<Response, ContractError> {
+    let owner = OWNER.load(deps.storage)?;
+    ensure!(info.sender == owner, ContractError::Unauthorized);
+
+    IS_CLOSED.save(deps.storage, &true)?;
+
+    let (winner, bid) = HIGHEST_BID.load(deps.storage)?;
+    let denom = TOKEN.load(deps.storage)?;
+
+    BIDS.remove(deps.storage, &winner);
+
+    let transfer_msg = BankMsg::Send {
+        to_address: owner.into(),
+        amount: coins(bid.u128(), denom),
+    };
+
+    let resp = Response::new()
+        .add_attribute("action", "close")
+        .add_attribute("sender", info.sender.as_str())
+        .add_attribute("winner", winner)
+        .add_message(transfer_msg);
+
+    Ok(resp)
+}
