@@ -3,9 +3,9 @@ use cosmwasm_std::{Addr, Decimal, Uint128};
 
 #[cw_serde]
 pub struct InstantiateMsg {
-    token: String,
-    owner: Option<String>,
-    commission: Decimal,
+    pub token: String,
+    pub owner: Option<String>,
+    pub commission: Decimal,
 }
 
 #[cw_serde]
