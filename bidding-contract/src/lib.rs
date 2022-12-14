@@ -39,7 +39,7 @@ pub fn instantiate(
 
     OWNER.save(deps.storage, &owner)?;
     TOKEN.save(deps.storage, &msg.token)?;
-    COMISSION.save(deps.storage, &msg.commission)?;
+    COMISSION.save(deps.storage, &msg.comission)?;
 
     IS_CLOSED.save(deps.storage, &false)?;
 

@@ -6,7 +6,7 @@ use cosmwasm_std::{Addr, Decimal, Uint128};
 pub struct InstantiateMsg {
     pub token: String,
     pub owner: Option<String>,
-    pub commission: Decimal,
+    pub comission: Decimal,
 }
 
 #[cw_serde]
