@@ -11,6 +11,8 @@ use state::{COMISSION, HIGHEST_BID, IS_CLOSED, OWNER, TOKEN};
 pub mod error;
 pub mod exec;
 pub mod msg;
+#[cfg(test)]
+pub mod multitest;
 pub mod query;
 pub mod state;
 

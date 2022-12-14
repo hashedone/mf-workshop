@@ -18,3 +18,6 @@ cw2 = "1.0.0"
 getrandom = { version = "0.2.8", features = ["js"] }
 serde = { version = "1.0.150", features = ["derive"] }
 thiserror = "1.0.37"
+
+[dev-dependencies]
+cw-multi-test = "0.16.1"
