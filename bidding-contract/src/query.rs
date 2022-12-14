@@ -16,8 +16,8 @@ pub fn highest_bid(deps: Deps) -> StdResult<BidInfo> {
 
 pub fn winner(deps: Deps) -> StdResult<WinnerResp> {
     let winner = match IS_CLOSED.load(deps.storage)? {
-        true => None,
-        false => HIGHEST_BID.load(deps.storage)?.0.into(),
+        false => None,
+        true => HIGHEST_BID.load(deps.storage)?.0.into(),
     };
 
     Ok(WinnerResp { winner })
@@ -25,7 +25,7 @@ pub fn winner(deps: Deps) -> StdResult<WinnerResp> {
 
 pub fn total_bid(deps: Deps, addr: String) -> StdResult<TotalBidResp> {
     let addr = Addr::unchecked(addr);
-    let amount = BIDS.load(deps.storage, &addr)?;
+    let amount = BIDS.may_load(deps.storage, &addr)?.unwrap_or_default();
     Ok(TotalBidResp { amount })
 }
 
