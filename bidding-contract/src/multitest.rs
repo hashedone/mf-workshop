@@ -93,6 +93,11 @@ fn flow() {
             .bank
             .init_balance(storage, &Addr::unchecked(bidder1), coins(100, STAR))
             .unwrap();
+
+        router
+            .bank
+            .init_balance(storage, &Addr::unchecked(bidder2), coins(100, STAR))
+            .unwrap();
     });
 
     let code_id = CodeId::store_code(&mut app);
@@ -124,9 +129,7 @@ fn flow() {
         }
     );
 
-    contract
-        .bid(&mut app, bidder1, &[Coin::new(100, STAR)])
-        .unwrap();
+    contract.bid(&mut app, bidder1, &coins(100, STAR)).unwrap();
 
     assert_eq!(
         contract.total_bid(&app, bidder1).unwrap(),
@@ -152,5 +155,17 @@ fn flow() {
             .query_balance(&Addr::unchecked(owner), STAR)
             .unwrap(),
         coin(5, STAR)
+    );
+
+    let err = contract
+        .bid(&mut app, bidder2, &coins(50, STAR))
+        .unwrap_err();
+
+    assert_eq!(
+        err,
+        ContractError::BidTooLow {
+            total: Uint128::zero(),
+            highest: Uint128::from(95u128),
+        }
     );
 }
