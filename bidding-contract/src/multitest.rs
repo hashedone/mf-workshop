@@ -1,7 +1,8 @@
-use cosmwasm_std::{Addr, Decimal, StdResult, Uint128};
+use cosmwasm_std::{coins, Addr, Coin, Decimal, StdResult, Uint128};
 use cw_multi_test::{App, ContractWrapper, Executor};
 
-use crate::msg::{BidInfo, InstantiateMsg, QueryMsg, TotalBidResp, WinnerResp};
+use crate::error::ContractError;
+use crate::msg::{BidInfo, ExecuteMsg, InstantiateMsg, QueryMsg, TotalBidResp, WinnerResp};
 use crate::{execute, instantiate, query};
 
 pub struct CodeId(u64);
@@ -43,6 +44,18 @@ impl CodeId {
 pub struct Contract(Addr);
 
 impl Contract {
+    #[track_caller]
+    pub fn bid(&self, app: &mut App, sender: &str, funds: &[Coin]) -> Result<(), ContractError> {
+        app.execute_contract(
+            Addr::unchecked(sender),
+            self.0.clone(),
+            &ExecuteMsg::Bid {},
+            funds,
+        )
+        .map_err(|e| e.downcast().unwrap())
+        .map(|_| ())
+    }
+
     pub fn winner(&self, app: &App) -> StdResult<WinnerResp> {
         app.wrap()
             .query_wasm_smart(self.0.clone(), &QueryMsg::Winner {})
@@ -101,4 +114,8 @@ fn flow() {
             amount: Uint128::zero(),
         }
     );
+
+    contract
+        .bid(&mut app, bidder1, &[Coin::new(100, STAR)])
+        .unwrap();
 }
