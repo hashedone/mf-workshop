@@ -84,7 +84,12 @@ fn flow() {
     let bidder1 = "bidder1";
     let bidder2 = "bidder2";
 
-    let mut app = App::default();
+    let mut app = App::new(|router, _api, storage| {
+        router
+            .bank
+            .init_balance(storage, &Addr::unchecked(bidder1), coins(100, STAR))
+            .unwrap();
+    });
 
     let code_id = CodeId::store_code(&mut app);
     let contract = code_id
