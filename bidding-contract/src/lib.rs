@@ -3,6 +3,7 @@ use cosmwasm_std::entry_point;
 use cosmwasm_std::{
     to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Uint128,
 };
+use cw2::set_contract_version;
 use error::ContractError;
 use msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use state::{COMISSION, HIGHEST_BID, IS_CLOSED, OWNER, TOKEN};
@@ -20,6 +21,12 @@ pub fn instantiate(
     info: MessageInfo,
     msg: InstantiateMsg,
 ) -> StdResult<Response> {
+    set_contract_version(
+        deps.storage,
+        env!("CARGO_PKG_NAME"),
+        env!("CARGO_PKG_VERSION"),
+    )?;
+
     HIGHEST_BID.save(deps.storage, &(info.sender.clone(), Uint128::zero()))?;
 
     let owner = msg
