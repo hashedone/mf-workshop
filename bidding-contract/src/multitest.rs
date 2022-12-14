@@ -1,4 +1,4 @@
-use cosmwasm_std::{coins, Addr, Coin, Decimal, StdResult, Uint128};
+use cosmwasm_std::{coin, coins, Addr, Coin, Decimal, StdResult, Uint128};
 use cw_multi_test::{App, ContractWrapper, Executor};
 
 use crate::error::ContractError;
@@ -44,6 +44,10 @@ impl CodeId {
 pub struct Contract(Addr);
 
 impl Contract {
+    pub fn addr(&self) -> Addr {
+        self.0.clone()
+    }
+
     #[track_caller]
     pub fn bid(&self, app: &mut App, sender: &str, funds: &[Coin]) -> Result<(), ContractError> {
         app.execute_contract(
@@ -80,7 +84,7 @@ const STAR: &str = "star";
 
 #[test]
 fn flow() {
-    let owner = "onwer";
+    let owner = "owner";
     let bidder1 = "bidder1";
     let bidder2 = "bidder2";
 
@@ -123,4 +127,30 @@ fn flow() {
     contract
         .bid(&mut app, bidder1, &[Coin::new(100, STAR)])
         .unwrap();
+
+    assert_eq!(
+        contract.total_bid(&app, bidder1).unwrap(),
+        TotalBidResp {
+            amount: Uint128::from(95u128),
+        }
+    );
+
+    assert_eq!(
+        contract.total_bid(&app, bidder2).unwrap(),
+        TotalBidResp {
+            amount: Uint128::zero(),
+        }
+    );
+
+    assert_eq!(
+        app.wrap().query_balance(&contract.addr(), STAR).unwrap(),
+        coin(95, STAR)
+    );
+
+    assert_eq!(
+        app.wrap()
+            .query_balance(&Addr::unchecked(owner), STAR)
+            .unwrap(),
+        coin(5, STAR)
+    );
 }
