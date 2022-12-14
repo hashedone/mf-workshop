@@ -1,4 +1,5 @@
 use cosmwasm_schema::cw_serde;
+use cosmwasm_schema::QueryResponses;
 use cosmwasm_std::{Addr, Decimal, Uint128};
 
 #[cw_serde]
@@ -16,13 +17,17 @@ pub enum ExecuteMsg {
 }
 
 #[cw_serde]
+#[derive(QueryResponses)]
 pub enum QueryMsg {
+    #[returns(IsClosedResp)]
     IsClosed {},
+    #[returns(BidInfo)]
     HighestBid {},
+    #[returns(WinnerResp)]
     Winner {},
-    TotalBid {
-        addr: String,
-    },
+    #[returns(TotalBidResp)]
+    TotalBid { addr: String },
+    #[returns(AllBidsResp)]
     AllBids {
         start_after: Option<String>,
         limit: Option<u32>,
